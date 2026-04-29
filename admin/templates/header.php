@@ -14,11 +14,14 @@ $currentPath = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel | MiniPanel Escolar</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="/minipanel_escolar/assets/css/style.css">
+<!-- DataTables + Buttons -->
+<link href="https://cdn.datatables.net/v/bs5/jszip-3.10.1/dt-2.1.2/b-3.1.0/b-html5-3.1.0/b-print-3.1.0/datatables.min.css" rel="stylesheet">
 
-
+<!-- Estilos propios del proyecto -->
+<link rel="stylesheet" href="/minipanel_escolar/assets/css/style.css">
 
 </head>
 

@@ -23,14 +23,32 @@ $mensaje = '';
 $tipo = 'success';
 
 // Mensajes cuando se regresa desde editar o eliminar
+// Mensajes cuando se regresa desde crear, editar o eliminar
 $ok = $_GET['ok'] ?? '';
 
-if ($ok === 'eliminado') {
+if ($ok === 'creado') {
+    $mensaje = 'La bitácora fue guardada correctamente.';
+    $tipo = 'success';
+
+} elseif ($ok === 'eliminado') {
     $mensaje = 'El registro fue eliminado correctamente.';
     $tipo = 'warning';
+
 } elseif ($ok === 'editado') {
     $mensaje = 'El registro fue actualizado correctamente.';
     $tipo = 'success';
+
+} elseif ($ok === 'metodo_invalido') {
+    $mensaje = 'Método no permitido. La eliminación debe hacerse desde el botón del sistema.';
+    $tipo = 'danger';
+
+} elseif ($ok === 'csrf') {
+    $mensaje = 'Solicitud no válida. Token de seguridad incorrecto.';
+    $tipo = 'danger';
+
+} elseif ($ok === 'id_invalido') {
+    $mensaje = 'No se recibió un ID válido para eliminar.';
+    $tipo = 'danger';
 }
 
 // Procesa el formulario cuando se envía por POST
@@ -115,22 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':creado_por' => $user['id'] ?? null,
         ]);
 
-        // Mensaje de éxito
-        $mensaje = 'La bitácora fue guardada correctamente.';
-
-        // Limpia algunos campos después de guardar
-        $curso = '';
-        $fecha = '';
-        $hora_entrada = '';
-        $hora_salida = '';
-        $actividad_realizar = '';
-        $sala_organizada = '';
-        $luces_apagadas = '';
-        $computadores_apagados = '';
-        $sin_problemas = '';
-        $sala_cerrada = '';
-        $aa_apagado = '';
-        $observaciones = '';
+        // Redirige después de guardar para evitar duplicados al actualizar
+        redirect_to(admin_url('bitacora.php?ok=creado'));
+        exit;
     }
 } else {
     // Valores iniciales cuando apenas se abre la página
@@ -300,7 +305,7 @@ $registrosBitacora = $consultaRegistros->fetchAll();
         <p class="text-muted mb-4">Aquí puedes ver las bitácoras registradas en la sala.</p>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-hover align-middle">
+            <table class="table table-bordered table-hover align-middle" id="tablaBitacora">
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
@@ -312,7 +317,7 @@ $registrosBitacora = $consultaRegistros->fetchAll();
                         <th>Sin problemas</th>
                         <th>Sala cerrada</th>
                         <th>Creado por</th>
-                        <th>Acciones</th>
+                        <th class="no-export">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -328,30 +333,30 @@ $registrosBitacora = $consultaRegistros->fetchAll();
                                 <td><?= e($registro['sin_problemas']) ?></td>
                                 <td><?= e($registro['sala_cerrada']) ?></td>
                                 <td><?= e($registro['usuario_creador'] ?? 'Sin dato') ?></td>
-                                <td class="d-flex gap-2">
+                                <td class="no-export d-flex gap-2">
                                     <a href="<?= e(admin_url('editar_bitacora.php?id=' . $registro['ID'])) ?>" class="btn btn-warning btn-sm">
                                         Editar
                                     </a>
-                                <form 
-    method="post" 
-    action="<?= e(admin_url('eliminar_bitacora.php')) ?>" 
-    class="m-0"
-    onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
+                                    <form
+                                        method="post"
+                                        action="<?= e(admin_url('eliminar_bitacora.php')) ?>"
+                                        class="m-0"
+                                        onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
 
-    <input 
-        type="hidden" 
-        name="id" 
-        value="<?= e($registro['ID']) ?>">
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value="<?= e($registro['ID']) ?>">
 
-    <input 
-        type="hidden" 
-        name="csrf_token" 
-        value="<?= e(csrf_token()) ?>">
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="<?= e(csrf_token()) ?>">
 
-    <button type="submit" class="btn btn-danger btn-sm">
-        Eliminar
-    </button>
-</form>
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
