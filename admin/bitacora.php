@@ -28,9 +28,22 @@ $ok = $_GET['ok'] ?? '';
 if ($ok === 'eliminado') {
     $mensaje = 'El registro fue eliminado correctamente.';
     $tipo = 'warning';
+
 } elseif ($ok === 'editado') {
     $mensaje = 'El registro fue actualizado correctamente.';
     $tipo = 'success';
+
+} elseif ($ok === 'metodo_invalido') {
+    $mensaje = 'Método no permitido. La eliminación debe hacerse desde el botón del sistema.';
+    $tipo = 'danger';
+
+} elseif ($ok === 'csrf') {
+    $mensaje = 'Solicitud no válida. Token de seguridad incorrecto.';
+    $tipo = 'danger';
+
+} elseif ($ok === 'id_invalido') {
+    $mensaje = 'No se recibió un ID válido para eliminar.';
+    $tipo = 'danger';
 }
 
 // Procesa el formulario cuando se envía por POST
@@ -332,26 +345,27 @@ $registrosBitacora = $consultaRegistros->fetchAll();
                                     <a href="<?= e(admin_url('editar_bitacora.php?id=' . $registro['ID'])) ?>" class="btn btn-warning btn-sm">
                                         Editar
                                     </a>
-                                <form 
-    method="post" 
-    action="<?= e(admin_url('eliminar_bitacora.php')) ?>" 
-    class="m-0"
-    onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
+                                <!-- eliminar por POST -->
+                                    <form
+                                        method="post"
+                                        action="<?= e(admin_url('eliminar_bitacora.php')) ?>"
+                                        class="m-0"
+                                        onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
 
-    <input 
-        type="hidden" 
-        name="id" 
-        value="<?= e($registro['ID']) ?>">
+                                        <input
+                                            type="hidden"
+                                            name="id"
+                                            value="<?= e($registro['ID']) ?>">
 
-    <input 
-        type="hidden" 
-        name="csrf_token" 
-        value="<?= e(csrf_token()) ?>">
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="<?= e(csrf_token()) ?>">
 
-    <button type="submit" class="btn btn-danger btn-sm">
-        Eliminar
-    </button>
-</form>
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            Eliminar
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

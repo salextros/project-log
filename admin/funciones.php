@@ -63,7 +63,7 @@ function verify_login_password(string $passwordPlano, string $hashGuardado): boo
     return $passwordPlano === 'Admin123*';
 }
 
-////////////////////////////////////////////////////////////////
+// Eliminar por POST //
 
 function csrf_token(): string
 {

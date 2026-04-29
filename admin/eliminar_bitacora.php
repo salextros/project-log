@@ -1,31 +1,28 @@
 <?php
-// Carga funciones reutilizables
 require_once __DIR__ . '/funciones.php';
-
-// Carga conexión a base de datos
 require_once __DIR__ . '/bd.php';
 
-// Inicia sesión si no existe
 session_start_if_needed();
-
-// Protege la página
 require_login();
 
-// Toma el id enviado por la URL
-$id = (int) ($_GET['id'] ?? 0);
-
-// Si no hay id válido, vuelve a bitácora
-if ($id <= 0) {
-    redirect_to(admin_url('bitacora.php'));
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    redirect_to(admin_url('bitacora.php?ok=metodo_invalido'));
 }
 
-// Prepara el DELETE
-$stmt = $conexion->prepare('DELETE FROM tbl_bitacora_sala1 WHERE ID = :id');
+if (!verify_csrf_token($_POST['csrf_token'] ?? null)) {
+    redirect_to(admin_url('bitacora.php?ok=csrf'));
+}
 
-// Ejecuta la eliminación
+$id = (int) ($_POST['id'] ?? 0);
+
+if ($id <= 0) {
+    redirect_to(admin_url('bitacora.php?ok=id_invalido'));
+}
+
+$stmt = $conexion->prepare('DELETE FROM tbl_bitacora_sala1 WHERE ID = :id LIMIT 1');
+
 $stmt->execute([
     ':id' => $id,
 ]);
 
-// Redirige de nuevo a la bitácora con mensaje
 redirect_to(admin_url('bitacora.php?ok=eliminado'));
