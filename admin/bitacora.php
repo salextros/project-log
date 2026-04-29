@@ -337,6 +337,7 @@ $registrosBitacora = $consultaRegistros->fetchAll();
                                     <a href="<?= e(admin_url('editar_bitacora.php?id=' . $registro['ID'])) ?>" class="btn btn-warning btn-sm">
                                         Editar
                                     </a>
+                                <!-- eliminar por POST -->
                                     <form
                                         method="post"
                                         action="<?= e(admin_url('eliminar_bitacora.php')) ?>"
