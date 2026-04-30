@@ -29,23 +29,18 @@ $ok = $_GET['ok'] ?? '';
 if ($ok === 'creado') {
     $mensaje = 'La bitácora fue guardada correctamente.';
     $tipo = 'success';
-
 } elseif ($ok === 'eliminado') {
     $mensaje = 'El registro fue eliminado correctamente.';
     $tipo = 'warning';
-
 } elseif ($ok === 'editado') {
     $mensaje = 'El registro fue actualizado correctamente.';
     $tipo = 'success';
-
 } elseif ($ok === 'metodo_invalido') {
     $mensaje = 'Método no permitido. La eliminación debe hacerse desde el botón del sistema.';
     $tipo = 'danger';
-
 } elseif ($ok === 'csrf') {
     $mensaje = 'Solicitud no válida. Token de seguridad incorrecto.';
     $tipo = 'danger';
-
 } elseif ($ok === 'id_invalido') {
     $mensaje = 'No se recibió un ID válido para eliminar.';
     $tipo = 'danger';
@@ -317,6 +312,14 @@ $registrosBitacora = $consultaRegistros->fetchAll();
                         <th>Sin problemas</th>
                         <th>Sala cerrada</th>
                         <th>Creado por</th>
+
+                        <th>Actividad a realizar</th>
+                        <th>Sala organizada</th>
+                        <th>Luces apagadas</th>
+                        <th>Computadores apagados</th>
+                        <th>Aire apagado</th>
+                        <th>Observaciones</th>
+
                         <th class="no-export">Acciones</th>
                     </tr>
                 </thead>
@@ -333,11 +336,19 @@ $registrosBitacora = $consultaRegistros->fetchAll();
                                 <td><?= e($registro['sin_problemas']) ?></td>
                                 <td><?= e($registro['sala_cerrada']) ?></td>
                                 <td><?= e($registro['usuario_creador'] ?? 'Sin dato') ?></td>
+
+                                <td><?= e($registro['actividad_realizar']) ?></td>
+                                <td><?= e($registro['sala_organizada']) ?></td>
+                                <td><?= e($registro['luces_apagadas']) ?></td>
+                                <td><?= e($registro['computadores_apagados']) ?></td>
+                                <td><?= e($registro['aa_apagado']) ?></td>
+                                <td><?= e($registro['observaciones']) ?></td>
                                 <td class="no-export d-flex gap-2">
+                                    
                                     <a href="<?= e(admin_url('editar_bitacora.php?id=' . $registro['ID'])) ?>" class="btn btn-warning btn-sm">
                                         Editar
                                     </a>
-                                <!-- eliminar por POST -->
+                                    <!-- eliminar por POST -->
                                     <form
                                         method="post"
                                         action="<?= e(admin_url('eliminar_bitacora.php')) ?>"
